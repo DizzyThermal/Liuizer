@@ -22,7 +22,7 @@ public class Caesar
 		else
 			loop = steps[(mod-1)];
 
-		if(isAlphaCharacter(c))
+		if(isAlphaNumericCharacter(c))
 		{
 			if(right)
 			{
@@ -32,8 +32,10 @@ public class Caesar
 	
 					if(C == (((int)'Z') + 1))
 						C = ((int)'A');
-					if(C == (((int)'z') + 1))
+					else if(C == (((int)'z') + 1))
 						C = ((int)'a');
+					else if(C == (((int)'9') + 1))
+						C = ((int)'0');
 				}
 			}
 			else
@@ -44,8 +46,10 @@ public class Caesar
 	
 					if(C == (((int)'A') - 1))
 						C = ((int)'Z');
-					if(C == (((int)'a') - 1))
+					else if(C == (((int)'a') - 1))
 						C = ((int)'z');
+					else if(C == (((int)'0') - 1))
+						C = ((int)'9');
 				}
 			}
 		}
@@ -53,9 +57,9 @@ public class Caesar
 		return ((char)C);
 	}
 	
-	private static boolean isAlphaCharacter(char c)
+	private static boolean isAlphaNumericCharacter(char c)
 	{
-		if((c >= ((int)'A') && c <= ((int)'Z')) || (c >= ((int)'a') && c <= ((int)'z')))
+		if((c >= ((int)'A') && c <= ((int)'Z')) || (c >= ((int)'a') && c <= ((int)'z')) || (c >= ((int)'0') && c <= ((int)'9')))
 			return true;
 
 		return false;

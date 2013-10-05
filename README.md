@@ -1,4 +1,4 @@
 Liuizer
 =======
 
-The All-In-One ECE 489/589 Solver
+The All-In-One ECE 489/549 Solver

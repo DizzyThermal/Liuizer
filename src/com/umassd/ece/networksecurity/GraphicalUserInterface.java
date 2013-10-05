@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -15,9 +16,11 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
 import javax.swing.SpinnerNumberModel;
 
 import com.umassd.ece.networksecurity.functions.Caesar;
+import com.umassd.ece.networksecurity.functions.DES;
 
 public class GraphicalUserInterface extends JFrame implements ActionListener
 {
@@ -36,6 +39,16 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 	private JPanel caesarButtonPanel			= new JPanel(new FlowLayout(FlowLayout.RIGHT));
 	private JPanel caesarOutputPanel			= new JPanel(new FlowLayout(FlowLayout.LEFT));
 	
+	// DES Panels
+	private JPanel desInputPanel				= new JPanel(new FlowLayout(FlowLayout.LEFT));
+	private JPanel desButtonPanel				= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	private JPanel desOutputPanel				= new JPanel(new FlowLayout(FlowLayout.LEFT));
+	
+	// RSA Panels
+	private JPanel rsaInputPanel				= new JPanel(new FlowLayout(FlowLayout.LEFT));
+	private JPanel rsaButtonPanel				= new JPanel(new FlowLayout(FlowLayout.RIGHT));
+	private JPanel rsaOutputPanel				= new JPanel(new FlowLayout(FlowLayout.LEFT));
+	
 	// Caesar Buttons
 	private JButton caesarShiftButton			= new JButton("Shift");
 	private JButton caesarAddSpinners			= new JButton("+");
@@ -44,13 +57,13 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 	private JCheckBox caesarReverse				= new JCheckBox("Reverse Loop");
 	
 	// DES Buttons
-	private JButton DESCalculateButton			= new JButton("Calculate");
+	private JButton desEncryptButton			= new JButton("Encrypt");
 	
 	// RSA Buttons
-	private JButton RSACalculateButton			= new JButton("Calculate");
+	private JButton rsaEncryptButton			= new JButton("Get Keys");
 	
-	// Caesar Cipher Output
-	private JScrollPane serviceDemandOutputPane	= new JScrollPane(new JTextArea());
+	// DES Output Pane
+	private JScrollPane desOutputPane			= new JScrollPane(new JTextArea());
 	
 	public GraphicalUserInterface()
 	{
@@ -72,7 +85,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 	
 	private void createCaesarPane()
 	{
-		// Input Panel (JLabel and JTextField)
+		// Input Panel
 		caesarInputPanel.add(new JLabel(Resources.ccInputString + ":"));
 		JTextField jTFInput = new JTextField();
 		jTFInput.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
@@ -99,10 +112,9 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 		caesarButtonPanel.add(caesarReverse);
 		caesarShiftButton.setPreferredSize(new Dimension(100, 25));
 		caesarButtonPanel.add(caesarShiftButton);
-		caesarButtonPanel.setPreferredSize(new Dimension(jTP_WIDTH-10, 60));
+		caesarButtonPanel.setPreferredSize(new Dimension(jTP_WIDTH-15, 60));
 		
-		
-		// Output Panel (Shift/Clear Buttons and Output JLabel/JTextField)
+		// Output Panel
 		caesarOutputPanel.add(new JLabel(Resources.ccOutputString + ":"));
 		JTextField jTFOutput = new JTextField();
 		jTFOutput.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
@@ -114,8 +126,6 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 		pane_caesar.add(caesarButtonPanel);
 		pane_caesar.add(caesarOutputPanel);
 		
-		pane_caesar.setPreferredSize(new Dimension());
-		
 		caesarAddSpinners.addActionListener(this);
 		caesarRemoveSpinners.addActionListener(this);
 		caesarShiftButton.addActionListener(this);
@@ -123,12 +133,41 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 	
 	private void createDESPane()
 	{
+		// Input Panel
+		desInputPanel.add(new JLabel(Resources.desInputString + ":"));
+		JTextField jTFInput = new JTextField();
+		jTFInput.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
+		desInputPanel.add(jTFInput);
+		desInputPanel.add(new JLabel(Resources.desKeyString + ":"));
+		JTextField jTFKey = new JTextField();
+		jTFKey.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
+		desInputPanel.add(jTFKey);
+		desInputPanel.setPreferredSize(new Dimension(jTP_WIDTH-10, 110));
 		
+		// Button Panel
+		desEncryptButton.setPreferredSize(new Dimension(100, 25));
+		desButtonPanel.add(desEncryptButton);
+		desButtonPanel.setPreferredSize(new Dimension(jTP_WIDTH-15, 30));
+		
+		// Output Panel
+		desOutputPanel.add(new JLabel(Resources.desOutputString + ":"));
+		desOutputPane.setPreferredSize(new Dimension(jTP_WIDTH-23, 352));
+		((JTextArea)((JViewport)desOutputPane.getComponent(0)).getView()).setEditable(false);
+		desOutputPanel.add(desOutputPane);
+		desOutputPanel.setPreferredSize(new Dimension(jTP_WIDTH-10, 500));
+		
+		pane_DES.add(desInputPanel);
+		pane_DES.add(desButtonPanel);
+		pane_DES.add(desOutputPanel);
+		
+		pane_DES.setPreferredSize(new Dimension());
+		
+		desEncryptButton.addActionListener(this);
 	}
 	
 	private void createRSAPane()
 	{
-		
+		// TODO
 	}
 	
 	private void setupTabs()
@@ -138,7 +177,6 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 		jTP.addTab("DES Encryption", pane_DES);
 		jTP.addTab("RSA Encryption", pane_RSA);
 		add(jTP);
-		jTP.setSelectedIndex(0);
 	}
 
 	@Override
@@ -178,6 +216,19 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 				revalidate();
 				repaint();
 			}
+		}
+		else if(e.getSource() == desEncryptButton)
+		{
+			String message = ((JTextField)caesarInputPanel.getComponent(1)).getText();
+			String key = ((JTextField)caesarInputPanel.getComponent(3)).getText();
+			
+			ArrayList<String> output = DES.encrypt(key, message);
+			String outputString = "";
+			for(int i = 0; i < output.size(); i++)
+				outputString += output.get(i);
+			
+			// Set Output
+			((JTextArea)((JViewport)desOutputPane.getComponent(0)).getView()).setText(outputString);
 		}
 	}
 }

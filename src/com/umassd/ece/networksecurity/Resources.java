@@ -12,6 +12,9 @@ public class Resources
 	public static final String ccOutputString		= "Output String";
 	
 	// DES Encryption
+	public static final String desInputString		= "Plaintext Input";
+	public static final String desKeyString			= "Key";
+	public static final String desOutputString		= "Output";
 	
 	// RSA Encryption
 	

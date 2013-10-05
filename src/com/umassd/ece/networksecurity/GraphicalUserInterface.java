@@ -14,8 +14,8 @@ import javax.swing.JTextArea;
 
 public class GraphicalUserInterface extends JFrame
 {
-	private final int jTP_WIDTH = 788;
-	private final int jTP_HEIGHT = 563;
+	private int jTP_WIDTH = 788;
+	private int jTP_HEIGHT = 563;
 	
 	// Overall Tabbed Pane
 	private JTabbedPane jTP = new JTabbedPane();

@@ -1,5 +1,7 @@
 package com.umassd.ece.networksecurity;
 
+import java.awt.Toolkit;
+
 import javax.swing.JFrame;
 
 public class Application
@@ -13,7 +15,8 @@ public class Application
 
 		GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GUI.setSize(WIDTH, HEIGHT);
-		GUI.setResizable(true);
+		GUI.setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.getClass().getResource("images/Application_Icon.png")));
+		GUI.setResizable(false);
 		GUI.setVisible(true);
 	}
 }

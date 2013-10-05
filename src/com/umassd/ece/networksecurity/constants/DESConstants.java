@@ -1,5 +1,8 @@
 package com.umassd.ece.networksecurity.constants;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class DESConstants {
 	/**The order of PC1 binary. */
 	public static final int[] PC1Order = {	57,49,41,33,25,17,9,1,58,50,42,34,26,18,10,2,59,51,43,35,27,19,11,3,60,52,44,36,
@@ -53,6 +56,8 @@ public class DESConstants {
 										{	1,	15,	13,	8,	10,	3,	7,	4,	12,	5,	6,	11,	0,	14,	9,	2},
 										{	7,	11,	4,	1,	9,	12,	14,	2,	0,	6,	10,	13,	15,	3,	5,	8},
 										{	2,	1,	14,	7,	4,	10,	8,	13,	15,	12,	9,	0,	3,	5,	6,	11}};
+	
+	public static final ArrayList<int[][]> SBox = new ArrayList<int[][]>(Arrays.asList(S1,S2,S3,S4,S5,S6,S7,S8));
 	
 	public static final int[] Permute = {	16,	7,	20,	21,	29,	12,	28,	17,
 											1,	15,	23,	26,	5,	18,	31,	10,

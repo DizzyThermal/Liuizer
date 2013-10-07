@@ -1,5 +1,7 @@
 package com.umassd.ece.networksecurity.functions;
 
+import java.util.ArrayList;
+
 import com.umassd.ece.networksecurity.constants.DESConstants;
 
 public class DES {
@@ -24,6 +26,14 @@ public class DES {
 	 * Binary version of the <b>PC1</b> step of the key.
 	 */
 	private static String PC1;
+	/**
+	 * Binary version of the <b>C0</b> step of the key.
+	 */
+	private static String C0;
+	/**
+	 * Binary version of the <b>D0</b> step of the key.
+	 */
+	private static String D0;
 	/**
 	 * Binary version of the <b>C1</b> step of the key.
 	 */
@@ -56,26 +66,45 @@ public class DES {
 	 * Binary version of the <b>P(B)</b> step of the message output.
 	 */
 	private static String PB;
-
-	public DES() {
-		this.keyIn = "";
-		this.messageIn = "";
+	/**
+	 * @param key The <b>HEX</b> values of the key.
+	 * @param message The <b>HEX</b> values of the message.
+	 * @return ArrayList containing all the outputs.
+	 */
+	public static ArrayList<String> encrypt(String key, String message) {
+		keyIn = key;
+		generateKey();
+		messageIn = message;
+		generateMessage();
+		return generateList();
 	}
 	
-	public DES(String key, String message) {
-		this.keyIn = key;
-		generateKey();
-		this.messageIn = message;
-		generateMessage();
+	private static ArrayList<String> generateList() {
+		ArrayList<String> temp = new ArrayList<String>();
+		temp.add("PC1:\n       " + PC1 + "\n       (" + binaryToHex(PC1) + ")\n\n");
+		temp.add("C0:\n       " + C0 + "\n       (" + binaryToHex(C0) + ")\n\n");
+		temp.add("D0:\n       " + D0 + "\n       (" + binaryToHex(D0) + ")\n\n");
+		temp.add("C1:\n       " + C1 + "\n       (" + binaryToHex(C1) + ")\n\n");
+		temp.add("D1:\n       " + D1 + "\n       (" + binaryToHex(D1) + ")\n\n");
+		temp.add("Key(PC2):\n       " + keyBin + "\n       (" + binaryToHex(keyBin) + ")\n\n");
+		temp.add("L0:\n       " + L0 + "\n       (" + binaryToHex(L0) + ")\n\n");
+		temp.add("R0:\n       " + R0 + "\n       (" + binaryToHex(R0) + ")\n\n");
+		temp.add("E[R0]:\n       " + ER0 + "\n       (" + binaryToHex(ER0) + ")\n\n");
+		temp.add("E[R0] XOR Key (A):\n       " + ERxorK + "\n       (" + binaryToHex(ERxorK) + ")\n\n");
+		temp.add("S-Box output (B):\n       " + B + "\n       (" + binaryToHex(B) + ")\n\n");
+		temp.add("P(B):\n       " + PB + "\n       (" + binaryToHex(PB) + ")\n\n");
+		temp.add("P(B) XOR L0 (R1):\n       " + messageBin + "\n       (" + binaryToHex(messageBin) + ")\n\n");
+		return temp;		
 	}
 	
 	private static void generateKey() {
 		keyBin = hexToBinary(keyIn);
 		PC1 = permute(keyBin,DESConstants.PC1Order);
+		C0 = PC1.substring(0,28);
 		C1 = PC1.substring(1,28) + PC1.charAt(0);
+		D0 = PC1.substring(28,56);
 		D1 = PC1.substring(29,56) + PC1.charAt(28);
 		keyBin = permute(C1+D1,DESConstants.PC2Order);
-		binaryToHex(keyBin);
 	}
 	
 	private static String permute(String initial, int[] order) {
@@ -123,19 +152,20 @@ public class DES {
 		out += R0.charAt(27) + R0.substring(28,32) + R0.charAt(0);
 		return out;
 	}
-	/*private static String getKeyHex() {	}
-	private static String getMessageHex() {	}
-	private static String getKeyBin() {	}
-	private static String getMessageBin() {	}*/
 	
-	public static String binaryToHex(String binary) {
+	public static String getKeyHex()		{	return binaryToHex(keyBin);		}
+	public static String getMessageHex()	{	return binaryToHex(messageBin);	}
+	public static String getKeyBin() 		{	return keyBin;					}
+	public static String getMessageBin()	{	return messageBin;				}
+	
+	private static String binaryToHex(String binary) {
 		String out = "";
 		for(int i = 0; i < binary.length(); i+=4) { 
 			out += Integer.toHexString(Integer.parseInt(binary.substring(i,i+4),2)).toUpperCase();
 		}
 		return out;
 	}
-	public static String hexToBinary(String hex) {
+	private static String hexToBinary(String hex) {
 		String out = "";
 		for (int i = 0; i < hex.length(); i++) {
 			out += String.format("%4s",Integer.toBinaryString(Integer.parseInt("" + hex.charAt(i),16))).replace(' ','0');

@@ -219,8 +219,8 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 		}
 		else if(e.getSource() == desEncryptButton)
 		{
-			String message = ((JTextField)caesarInputPanel.getComponent(1)).getText();
-			String key = ((JTextField)caesarInputPanel.getComponent(3)).getText();
+			String message = ((JTextField)desInputPanel.getComponent(1)).getText();
+			String key = ((JTextField)desInputPanel.getComponent(3)).getText();
 			
 			ArrayList<String> output = DES.encrypt(key, message);
 			String outputString = "";

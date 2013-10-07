@@ -21,6 +21,5 @@ public class Resources
 	public static final String rsaInputQ			= "q";
 	public static final String rsaInputE			= "e";
 	public static final String rsaInputM			= "M";
-	public static final String rsaDecrypted			= "Decrypted Message";
-	public static final String rsaEncrypted			= "Encrypted Message";
+	public static final String rsaOutputString		= "Output";
 }

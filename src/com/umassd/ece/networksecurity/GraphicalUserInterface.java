@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.SpinnerNumberModel;
 
 import com.umassd.ece.networksecurity.functions.Caesar;
 import com.umassd.ece.networksecurity.functions.DES;
+import com.umassd.ece.networksecurity.functions.RSA;
 
 public class GraphicalUserInterface extends JFrame implements ActionListener
 {
@@ -60,10 +62,11 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 	private JButton desEncryptButton			= new JButton("Encrypt");
 	
 	// RSA Buttons
-	private JButton rsaEncryptButton			= new JButton("Get Keys");
+	private JButton rsaEncryptButton			= new JButton("Encrypt/Decrypt");
 	
-	// DES Output Pane
+	// Output Panes
 	private JScrollPane desOutputPane			= new JScrollPane(new JTextArea());
+	private JScrollPane rsaOutputPane			= new JScrollPane(new JTextArea());
 	
 	public GraphicalUserInterface()
 	{
@@ -160,14 +163,47 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 		pane_DES.add(desButtonPanel);
 		pane_DES.add(desOutputPanel);
 		
-		pane_DES.setPreferredSize(new Dimension());
-		
-		desEncryptButton.addActionListener(this);
+		rsaEncryptButton.addActionListener(this);
 	}
 	
 	private void createRSAPane()
 	{
-		// TODO
+		// Input Panel
+		rsaInputPanel.add(new JLabel(Resources.rsaInputP + ":"));
+		JTextField jTFInputP = new JTextField();
+		jTFInputP.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
+		rsaInputPanel.add(jTFInputP);
+		rsaInputPanel.add(new JLabel(Resources.rsaInputQ + ":"));
+		JTextField jTFInputQ = new JTextField();
+		jTFInputQ.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
+		rsaInputPanel.add(jTFInputQ);
+		rsaInputPanel.add(new JLabel(Resources.rsaInputE + ":"));
+		JTextField jTFInputE = new JTextField();
+		jTFInputE.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
+		rsaInputPanel.add(jTFInputE);
+		rsaInputPanel.add(new JLabel(Resources.rsaInputM + ":"));
+		JTextField jTFInputM = new JTextField();
+		jTFInputM.setPreferredSize(new Dimension(jTP_WIDTH-24, 25));
+		rsaInputPanel.add(jTFInputM);
+		rsaInputPanel.setPreferredSize(new Dimension(jTP_WIDTH-10, 210));
+		
+		// Button Panel
+		rsaEncryptButton.setPreferredSize(new Dimension(100, 25));
+		rsaButtonPanel.add(rsaEncryptButton);
+		rsaButtonPanel.setPreferredSize(new Dimension(jTP_WIDTH-15, 30));
+		
+		// Output Panel
+		rsaOutputPanel.add(new JLabel(Resources.rsaOutputString + ":"));
+		rsaOutputPane.setPreferredSize(new Dimension(jTP_WIDTH-23, 252));
+		((JTextArea)((JViewport)rsaOutputPane.getComponent(0)).getView()).setEditable(false);
+		rsaOutputPanel.add(rsaOutputPane);
+		rsaOutputPanel.setPreferredSize(new Dimension(jTP_WIDTH-10, 300));
+		
+		pane_RSA.add(rsaInputPanel);
+		pane_RSA.add(rsaButtonPanel);
+		pane_RSA.add(rsaOutputPanel);
+		
+		desEncryptButton.addActionListener(this);
 	}
 	
 	private void setupTabs()
@@ -229,6 +265,21 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 			
 			// Set Output
 			((JTextArea)((JViewport)desOutputPane.getComponent(0)).getView()).setText(outputString);
+		}
+		else if(e.getSource() == rsaEncryptButton)
+		{
+			String pIn = ((JTextField)rsaInputPanel.getComponent(1)).getText();
+			String qIn = ((JTextField)rsaInputPanel.getComponent(3)).getText();
+			String eIn = ((JTextField)rsaInputPanel.getComponent(5)).getText();
+			String MIn = ((JTextField)rsaInputPanel.getComponent(7)).getText();
+			
+			ArrayList<String> output = RSA.encrypt(BigInteger.valueOf(Long.parseLong(pIn)), BigInteger.valueOf(Long.parseLong(qIn)), BigInteger.valueOf(Long.parseLong(eIn)), BigInteger.valueOf(Long.parseLong(MIn)));
+			String outputString = "";
+			for(int i = 0; i < output.size(); i++)
+				outputString += output.get(i) + "\n";
+			
+			// Set Output
+			((JTextArea)((JViewport)rsaOutputPane.getComponent(0)).getView()).setText(outputString);
 		}
 	}
 }

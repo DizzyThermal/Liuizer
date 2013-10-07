@@ -2,22 +2,16 @@ package com.umassd.ece.networksecurity.functions;
 
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
+import com.umassd.ece.networksecurity.SpreadSheet;
 import com.umassd.ece.networksecurity.constants.DESConstants;
 
 public class DES {
-	
-	/**
-	 * Input HEX key text.
-	 */
-	private static String keyIn;
 	/**
 	 * Binary version of the <b>ENCODED</b> key.
 	 */
 	private static String keyBin;
-	/**
-	 * Input message text.
-	 */
-	private static String messageIn;
 	/**
 	 * Binary version of the <b>OUTPUT</b> message.
 	 */
@@ -71,10 +65,13 @@ public class DES {
 	 * @param message The <b>HEX</b> values of the message.
 	 * @return ArrayList containing all the outputs.
 	 */
-	public static ArrayList<String> encrypt(String key, String message) {
-		keyIn = key;
+	public static ArrayList<String> encrypt(String key, String message)
+	{
+		key = convert(key);
+		message = convert(message);
+		keyBin = key;
 		generateKey();
-		messageIn = message;
+		messageBin = message;
 		generateMessage();
 		return generateList();
 	}
@@ -98,7 +95,7 @@ public class DES {
 	}
 	
 	private static void generateKey() {
-		keyBin = hexToBinary(keyIn);
+		keyBin = pad(keyBin);
 		PC1 = permute(keyBin,DESConstants.PC1Order);
 		C0 = PC1.substring(0,28);
 		C1 = PC1.substring(1,28) + PC1.charAt(0);
@@ -116,7 +113,6 @@ public class DES {
 	}
 	
 	private static void generateMessage() {
-		messageBin = hexToBinary(messageIn);
 		L0 = permute(messageBin,DESConstants.L0Order);
 		R0 = permute(messageBin,DESConstants.R0Order);
 		ER0 = eTable();
@@ -127,16 +123,34 @@ public class DES {
 	}
 	
 	private static String sboxSubstitution() {
+		String[][] data = new String[9][4];
+		data[0][0] = "6-bit from A";
+		data[0][1] = "(b2, b3, b4, b5)";
+		data[0][2] = "(column) in base 10";
+		data[0][3] = "In base 2";
+		
 		String out = "";
 		int row, column, bounds = 0;
 		String bits = "";
 		for(int i = 0; i < DESConstants.SBox.size(); i++) {
 			bits = ERxorK.substring(bounds, bounds+6);
+			data[i+1][0] = bits;
 			row = Integer.parseInt(""+bits.charAt(0)+bits.charAt(5),2);
 			column = Integer.parseInt(bits.substring(1,5),2);
+			data[i+1][1] = bits.substring(1,5);
+			data[i+1][2] = Integer.toString(DESConstants.SBox.get(i)[row][column]);
+			data[i+1][3] = String.format("%4s",Integer.toBinaryString(DESConstants.SBox.get(i)[row][column])).replace(' ','0');
 			out += String.format("%4s",Integer.toBinaryString(DESConstants.SBox.get(i)[row][column])).replace(' ','0');
 			bounds += 6;
 		}
+		
+		SpreadSheet ss = new SpreadSheet(data);
+		JFrame jF = new JFrame();
+		jF.add(ss);
+		jF.setSize(800, 600);
+		jF.setTitle("S-Box Output");
+		jF.setVisible(true);
+
 		return out;
 	}
 	
@@ -170,7 +184,69 @@ public class DES {
 		for (int i = 0; i < hex.length(); i++) {
 			out += String.format("%4s",Integer.toBinaryString(Integer.parseInt("" + hex.charAt(i),16))).replace(' ','0');
 		}
+
 		return out;
+	}
+	
+	private static String alphaToBinary(String alpha) {
+		String returnString = "";
+		for(int i = 0; i < alpha.length(); i++) {
+			switch(alpha.charAt(i)) {
+			case 'a':
+				returnString += '0';
+				break;
+			case 'b':
+				returnString += '1';
+				break;
+			case 'c':
+				returnString += '2';
+				break;
+			case 'd':
+				returnString += '3';
+				break;
+			case 'e':
+				returnString += '4';
+				break;
+			case 'f':
+				returnString += '5';
+				break;
+			case 'g':
+				returnString += '6';
+				break;
+			case 'h':
+				returnString += '7';
+				break;
+			case 'i':
+				returnString += '8';
+				break;
+			case 'j':
+				returnString += '9';
+				break;
+			case 'r':
+				returnString += '9';
+				break;
+			case 'k':
+				returnString += 'A';
+				break;
+			case 'l':
+				returnString += 'B';
+				break;
+			case 'm':
+				returnString += 'C';
+				break;
+			case 'n':
+				returnString += 'D';
+				break;
+			case 'o':
+				returnString += 'E';
+				break;
+			case 'p':
+				returnString += 'F';
+				break;
+			}
+		}
+		
+		return hexToBinary(returnString);
 	}
 	
 	private static String xor(String binary1, String binary2) {
@@ -179,5 +255,25 @@ public class DES {
 			out += (binary1.charAt(i) == binary2.charAt(i))?("0"):("1");
 		}
 		return out;
+	}
+	
+	private static String convert(String s) {
+		if(s.length() > 16)
+			return s;
+		else {
+			// Alpha
+			if(s.toLowerCase().equals(s))
+				return alphaToBinary(s);
+			// Hex
+			else
+				return hexToBinary(s);
+		}
+	}
+	
+	private static String pad(String s) {
+		while(s.length() < 64)
+			s = '0' + s;
+		
+		return s;
 	}
 }

@@ -67,30 +67,28 @@ public class DES {
 	 */
 	public static ArrayList<String> encrypt(String key, String message)
 	{
-		key = convert(key);
-		message = convert(message);
-		keyBin = key;
+		keyBin = convert(key);
+		messageBin = convert(message);
 		generateKey();
-		messageBin = message;
 		generateMessage();
 		return generateList();
 	}
 	
 	private static ArrayList<String> generateList() {
 		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("PC1:\n       " + PC1 + "\n       (" + binaryToHex(PC1) + ")\n\n");
-		temp.add("C0:\n       " + C0 + "\n       (" + binaryToHex(C0) + ")\n\n");
-		temp.add("D0:\n       " + D0 + "\n       (" + binaryToHex(D0) + ")\n\n");
-		temp.add("C1:\n       " + C1 + "\n       (" + binaryToHex(C1) + ")\n\n");
-		temp.add("D1:\n       " + D1 + "\n       (" + binaryToHex(D1) + ")\n\n");
-		temp.add("Key(PC2):\n       " + keyBin + "\n       (" + binaryToHex(keyBin) + ")\n\n");
-		temp.add("L0:\n       " + L0 + "\n       (" + binaryToHex(L0) + ")\n\n");
-		temp.add("R0:\n       " + R0 + "\n       (" + binaryToHex(R0) + ")\n\n");
-		temp.add("E[R0]:\n       " + ER0 + "\n       (" + binaryToHex(ER0) + ")\n\n");
-		temp.add("E[R0] XOR Key (A):\n       " + ERxorK + "\n       (" + binaryToHex(ERxorK) + ")\n\n");
-		temp.add("S-Box output (B):\n       " + B + "\n       (" + binaryToHex(B) + ")\n\n");
-		temp.add("P(B):\n       " + PB + "\n       (" + binaryToHex(PB) + ")\n\n");
-		temp.add("P(B) XOR L0 (R1):\n       " + messageBin + "\n       (" + binaryToHex(messageBin) + ")\n\n");
+		temp.add("PC1:\n       Bin: " + PC1 + "\n       Hex: " + binaryToHex(PC1) + "\n\n");
+		temp.add("C0:\n       Bin: " + C0 + "\n       Hex: " + binaryToHex(C0) + "\n\n");
+		temp.add("D0:\n       Bin: " + D0 + "\n       Hex: " + binaryToHex(D0) + "\n\n");
+		temp.add("C1:\n       Bin: " + C1 + "\n       Hex: " + binaryToHex(C1) + "\n\n");
+		temp.add("D1:\n       Bin: " + D1 + "\n       Hex: " + binaryToHex(D1) + "\n\n");
+		temp.add("Key(PC2):\n       Bin: " + keyBin + "\n       Hex: " + binaryToHex(keyBin) + "\n\n");
+		temp.add("L0:\n       Bin: " + L0 + "\n       Hex: " + binaryToHex(L0) + "\n\n");
+		temp.add("R0:\n       Bin: " + R0 + "\n       Hex: " + binaryToHex(R0) + "\n\n");
+		temp.add("E[R0]:\n       Bin: " + ER0 + "\n       Hex: " + binaryToHex(ER0) + "\n\n");
+		temp.add("E[R0] XOR Key (A):\n       Bin: " + ERxorK + "\n       Hex: " + binaryToHex(ERxorK) + "\n\n");
+		temp.add("S-Box output (B):\n       Bin: " + B + "\n       Hex: " + binaryToHex(B) + "\n\n");
+		temp.add("P(B):\n       Bin: " + PB + "\n       Hex: " + binaryToHex(PB) + "\n\n");
+		temp.add("P(B) XOR L0 (R1):\n       Bin: " + messageBin + "\n       Hex: " + binaryToHex(messageBin) + "\n\n");
 		return temp;		
 	}
 	
@@ -258,6 +256,7 @@ public class DES {
 	}
 	
 	private static String convert(String s) {
+		s = s.replaceAll(" ", "");
 		if(s.length() > 16)
 			return s;
 		else {

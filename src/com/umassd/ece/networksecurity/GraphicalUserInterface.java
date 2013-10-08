@@ -188,7 +188,7 @@ public class GraphicalUserInterface extends JFrame implements ActionListener
 		rsaInputPanel.setPreferredSize(new Dimension(jTP_WIDTH-10, 210));
 		
 		// Button Panel
-		rsaEncryptButton.setPreferredSize(new Dimension(100, 25));
+		rsaEncryptButton.setPreferredSize(new Dimension(150, 25));
 		rsaButtonPanel.add(rsaEncryptButton);
 		rsaButtonPanel.setPreferredSize(new Dimension(jTP_WIDTH-15, 30));
 		

@@ -3,8 +3,8 @@ package com.umassd.ece.networksecurity;
 public class Resources
 {
 	// Version Code Names increment in Alphabetical order with the topic of: Beer
-	public static final String VERSION_NUMBER		= "v0.0.2";
-	public static final String VERSION_CODENAME		= "Budweiser";
+	public static final String VERSION_NUMBER		= "v1.0.0";
+	public static final String VERSION_CODENAME		= "Corona";
 	
 	// Caesar Cipher
 	public static final String ccInputString		= "Input String";
